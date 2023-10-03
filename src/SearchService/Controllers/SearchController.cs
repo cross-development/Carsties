@@ -59,6 +59,4 @@ public class SearchController : ControllerBase
             results = result.Results
         });
     }
-
-
 }
