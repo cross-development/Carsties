@@ -9,13 +9,15 @@ public class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
-        CreateMap<Auction, AuctionDto>().IncludeMembers(x => x.Item);
+        CreateMap<Auction, AuctionDto>().IncludeMembers(auction => auction.Item);
         CreateMap<Item, AuctionDto>();
         CreateMap<CreateAuctionDto, Auction>()
-            .ForMember(destinationMember => destinationMember.Item,
-                memberOptions =>
-                    memberOptions.MapFrom(mapExpression => mapExpression));
+            .ForMember(auction => auction.Item,
+                options =>
+                    options.MapFrom(createAuctionDto => createAuctionDto));
         CreateMap<CreateAuctionDto, Item>();
         CreateMap<AuctionDto, AuctionCreated>();
+        CreateMap<Auction, AuctionUpdated>().IncludeMembers(auction => auction.Item);
+        CreateMap<Item, AuctionUpdated>();
     }
 }
