@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace IdentityService.Pages.Login;
+namespace IdentityService.Pages.Account.Login;
 
 [SecurityHeaders]
 [AllowAnonymous]
@@ -91,9 +91,11 @@ public class Index : PageModel
         if (ModelState.IsValid)
         {
             var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberLogin, lockoutOnFailure: true);
+           
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(Input.Username);
+               
                 await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.Client.ClientId));
 
                 if (context != null)
@@ -126,11 +128,13 @@ public class Index : PageModel
             }
 
             await _events.RaiseAsync(new UserLoginFailureEvent(Input.Username, "invalid credentials", clientId:context?.Client.ClientId));
+            
             ModelState.AddModelError(string.Empty, LoginOptions.InvalidCredentialsErrorMessage);
         }
 
         // something went wrong, show form with error
         await BuildModelAsync(Input.ReturnUrl);
+
         return Page();
     }
         
@@ -142,6 +146,7 @@ public class Index : PageModel
         };
             
         var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
+
         if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
         {
             var local = context.IdP == Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider;
@@ -172,18 +177,20 @@ public class Index : PageModel
                 AuthenticationScheme = x.Name
             }).ToList();
 
-        var dyanmicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
+        var dynamicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
             .Where(x => x.Enabled)
             .Select(x => new ViewModel.ExternalProvider
             {
                 AuthenticationScheme = x.Scheme,
                 DisplayName = x.DisplayName
             });
-        providers.AddRange(dyanmicSchemes);
+
+        providers.AddRange(dynamicSchemes);
 
 
         var allowLocal = true;
         var client = context?.Client;
+
         if (client != null)
         {
             allowLocal = client.EnableLocalLogin;

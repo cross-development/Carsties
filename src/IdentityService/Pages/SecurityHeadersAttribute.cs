@@ -1,7 +1,3 @@
-// Copyright (c) Duende Software. All rights reserved.
-// See LICENSE in the project root for license information.
-
-
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -12,6 +8,7 @@ public class SecurityHeadersAttribute : ActionFilterAttribute
     public override void OnResultExecuting(ResultExecutingContext context)
     {
         var result = context.Result;
+
         if (result is PageResult)
         {
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
@@ -38,6 +35,7 @@ public class SecurityHeadersAttribute : ActionFilterAttribute
             {
                 context.HttpContext.Response.Headers.Add("Content-Security-Policy", csp);
             }
+
             // and once again for IE
             if (!context.HttpContext.Response.Headers.ContainsKey("X-Content-Security-Policy"))
             {
@@ -46,6 +44,7 @@ public class SecurityHeadersAttribute : ActionFilterAttribute
 
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
             var referrer_policy = "no-referrer";
+
             if (!context.HttpContext.Response.Headers.ContainsKey("Referrer-Policy"))
             {
                 context.HttpContext.Response.Headers.Add("Referrer-Policy", referrer_policy);
