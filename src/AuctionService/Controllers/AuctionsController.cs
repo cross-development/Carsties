@@ -1,18 +1,19 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using MassTransit;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using AuctionService.Data;
 using AuctionService.DTOs;
 using AuctionService.Entities;
 using Contracts;
-using MassTransit;
 
 namespace AuctionService.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class AuctionsController : ControllerBase
 {
     private readonly AuctionDbContext _context;
@@ -57,15 +58,14 @@ public class AuctionsController : ControllerBase
         return _mapper.Map<AuctionDto>(auction);
     }
 
+    [Authorize]
     [HttpPost]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto createAuctionDto)
     {
         var auction = _mapper.Map<Auction>(createAuctionDto);
 
-        // TODO: add current user as seller
-
-        auction.Seller = "test";
+        auction.Seller = User.Identity?.Name;
 
         _context.Auctions.Add(auction);
 
@@ -83,6 +83,7 @@ public class AuctionsController : ControllerBase
         return CreatedAtAction(nameof(GetAuctionById), new { auction.Id }, newAuction);
     }
 
+    [Authorize]
     [HttpPut("{id:guid}")]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
@@ -96,7 +97,10 @@ public class AuctionsController : ControllerBase
             return NotFound();
         }
 
-        // TODO: check seller == username
+        if (auction.Seller != User.Identity?.Name)
+        {
+            return Forbid();
+        }
 
         auction.Item.Make = updateAuctionDto.Make ?? auction.Item.Make;
         auction.Item.Model = updateAuctionDto.Model ?? auction.Item.Model;
@@ -116,6 +120,7 @@ public class AuctionsController : ControllerBase
         return BadRequest("Problem saving changes");
     }
 
+    [Authorize]
     [HttpDelete("{id:guid}")]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<ActionResult> DeleteAuction(Guid id)
@@ -127,7 +132,10 @@ public class AuctionsController : ControllerBase
             return NotFound();
         }
 
-        // TODO: check seller == username
+        if (auction.Seller != User.Identity?.Name)
+        {
+            return Forbid();
+        }
 
         _context.Auctions.Remove(auction);
 
