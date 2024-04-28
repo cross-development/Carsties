@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Contracts;
 using MassTransit;
 using MongoDB.Entities;
 using SearchService.Models;
+using Contracts;
 
 namespace SearchService.Consumers;
 
