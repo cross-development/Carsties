@@ -1,9 +1,10 @@
 import type { FC } from 'react';
+import Listings from './auctions/Listings';
 
 const Home: FC = () => {
   return (
     <div>
-      <h3 className="text-3xl font-semibold">Carsties App!</h3>
+      <Listings />
     </div>
   );
 };
