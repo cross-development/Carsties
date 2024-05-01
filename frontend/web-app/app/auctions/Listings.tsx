@@ -1,7 +1,8 @@
 import { memo, type FC } from 'react';
 import AuctionCard from './AuctionCard';
+import { Auction, PagedResult } from '@/types';
 
-async function getData(): Promise<any> {
+async function getData(): Promise<PagedResult<Auction>> {
   const res = await fetch('http://localhost:6001/search');
 
   if (!res.ok) {
@@ -17,7 +18,7 @@ const Listings: FC = memo(async () => {
   return (
     <div className="grid grid-cols-4 gap-6">
       {data &&
-        data.results.map((auction: any) => (
+        data.results.map(auction => (
           <AuctionCard
             key={auction.id}
             auction={auction}
