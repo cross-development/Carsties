@@ -1,7 +1,7 @@
 'use client';
 
-import { memo, type FC } from 'react';
-import Countdown, { zeroPad, type CountdownRenderProps } from 'react-countdown';
+import { memo, FC } from 'react';
+import Countdown, { zeroPad, CountdownRenderProps } from 'react-countdown';
 
 const renderer = ({ days, hours, minutes, seconds, completed }: CountdownRenderProps) => (
   <div
