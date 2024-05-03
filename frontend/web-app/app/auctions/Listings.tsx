@@ -16,6 +16,8 @@ const Listings: FC = memo(() => {
     pageSize: state.pageSize,
     pageNumber: state.pageNumber,
     searchTerm: state.searchTerm,
+    orderBy: state.orderBy,
+    filterBy: state.filterBy,
   }));
 
   const setParams = useParamsStore(state => state.setParams);
