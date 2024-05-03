@@ -1,5 +1,5 @@
 import { GiFinishLine, GiFlame } from 'react-icons/gi';
-import { BsFillStopBtnFill, BsStopwatchFill } from 'react-icons/bs';
+import { BsFillStopCircleFill, BsStopwatchFill } from 'react-icons/bs';
 import { AiOutlineClockCircle, AiOutlineSortAscending } from 'react-icons/ai';
 
 export const pageSizeButtons = [4, 8, 12];
@@ -17,7 +17,7 @@ export const orderButtons = [
   },
   {
     label: 'Recently added',
-    icon: BsFillStopBtnFill,
+    icon: BsFillStopCircleFill,
     value: 'new',
   },
 ];
@@ -29,7 +29,7 @@ export const filterButtons = [
     value: 'live',
   },
   {
-    label: 'Ending less then 6 hours',
+    label: 'Ending < 6 hours',
     icon: GiFinishLine,
     value: 'endingSoon',
   },

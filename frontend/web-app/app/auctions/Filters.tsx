@@ -18,6 +18,7 @@ const Filters: FC = memo(() => {
           {filterSettings.filterButtons.map(({ label, icon: Icon, value }) => (
             <Button
               key={value}
+              positionInGroup="start"
               color={filterBy === value ? 'red' : 'gray'}
               onClick={() => setParams({ filterBy: value })}
               className="focus:ring-0"
@@ -36,6 +37,7 @@ const Filters: FC = memo(() => {
           {filterSettings.orderButtons.map(({ label, icon: Icon, value }) => (
             <Button
               key={value}
+              positionInGroup="start"
               color={orderBy === value ? 'red' : 'gray'}
               onClick={() => setParams({ orderBy: value })}
               className="focus:ring-0"
@@ -54,6 +56,7 @@ const Filters: FC = memo(() => {
           {filterSettings.pageSizeButtons.map((value, index) => (
             <Button
               key={index}
+              positionInGroup="start"
               color={pageSize === value ? 'red' : 'gray'}
               onClick={() => setParams({ pageSize: value })}
               className="focus:ring-0"
