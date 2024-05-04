@@ -14,7 +14,7 @@ const Navbar: FC = memo(async () => {
 
       <Search />
 
-      {user ? <UserActions /> : <LoginButton />}
+      {user ? <UserActions user={user} /> : <LoginButton />}
     </header>
   );
 });
