@@ -11,7 +11,7 @@ const Logo: FC = memo(() => {
 
   const reset = useParamsStore(state => state.reset);
 
-  const handleReset = () => {
+  const handleReset = (): void => {
     if (pathname !== '/') {
       router.push('/');
     }

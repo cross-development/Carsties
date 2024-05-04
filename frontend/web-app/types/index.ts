@@ -22,3 +22,5 @@ export type Auction = {
   mileage: number;
   imageUrl: string;
 };
+
+export type UpdateAuctionResult = string | { status: number; message: string };

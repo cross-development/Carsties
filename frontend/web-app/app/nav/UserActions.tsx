@@ -13,7 +13,9 @@ interface Props {
 }
 
 const UserActions: FC<Props> = memo(({ user }) => {
-  const handleLogout = () => signOut({ callbackUrl: '/' });
+  const handleLogout = (): void => {
+    signOut({ callbackUrl: '/' });
+  };
 
   return (
     <Dropdown

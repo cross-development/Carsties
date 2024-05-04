@@ -5,7 +5,9 @@ import { signIn } from 'next-auth/react';
 import { Button } from 'flowbite-react';
 
 const LoginButton: FC = memo(() => {
-  const handleLogin = () => signIn('id-server', { callbackUrl: '/' });
+  const handleLogin = (): void => {
+    signIn('id-server', { callbackUrl: '/' });
+  };
 
   return (
     <Button

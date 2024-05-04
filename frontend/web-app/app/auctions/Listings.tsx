@@ -4,7 +4,7 @@ import { memo, useEffect, useState, FC, useCallback } from 'react';
 import qs from 'query-string';
 import Filters from './Filters';
 import AuctionCard from './AuctionCard';
-import EmptyFilter from '../components/EmptyFilter';
+import NoData from '../components/NoData';
 import AppPagination from '../components/AppPagination';
 import { getData } from '../actions/auctionActions';
 import { Auction, PagedResult } from '@/types';
@@ -43,7 +43,7 @@ const Listings: FC = memo(() => {
       <Filters />
 
       {data.totalCount === 0 ? (
-        <EmptyFilter showReset />
+        <NoData showReset />
       ) : (
         <>
           <div className="grid grid-cols-4 gap-6">
