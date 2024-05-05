@@ -2,17 +2,40 @@
 
 import { FC, memo } from 'react';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import { Dropdown } from 'flowbite-react';
 import { HiCog, HiUser } from 'react-icons/hi';
 import { AiFillCar, AiFillTrophy, AiOutlineLogout } from 'react-icons/ai';
+import { useParamsStore } from '@/hooks/useParamsStore';
 
 interface Props {
-  user: Partial<User>;
+  user: User;
 }
 
 const UserActions: FC<Props> = memo(({ user }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const setParams = useParamsStore(state => state.setParams);
+
+  const currentPathAndRedirectToHomePage = (): void => {
+    if (pathname !== '/') {
+      router.push('/');
+    }
+  };
+
+  const setWinner = (): void => {
+    setParams({ winner: user?.username, seller: undefined });
+    currentPathAndRedirectToHomePage();
+  };
+
+  const setSeller = (): void => {
+    setParams({ seller: user?.username, winner: undefined });
+    currentPathAndRedirectToHomePage();
+  };
+
   const handleLogout = (): void => {
     signOut({ callbackUrl: '/' });
   };
@@ -20,18 +43,24 @@ const UserActions: FC<Props> = memo(({ user }) => {
   return (
     <Dropdown
       inline
-      label={`Welcome ${user.name}`}
+      label={`Welcome ${user?.name}`}
     >
-      <Dropdown.Item icon={HiUser}>
+      <Dropdown.Item
+        icon={HiUser}
+        onClick={setSeller}
+      >
         <Link href="/">My auctions</Link>
       </Dropdown.Item>
 
-      <Dropdown.Item icon={AiFillTrophy}>
+      <Dropdown.Item
+        icon={AiFillTrophy}
+        onClick={setWinner}
+      >
         <Link href="/">Auctions won</Link>
       </Dropdown.Item>
 
       <Dropdown.Item icon={AiFillCar}>
-        <Link href="/">Sell my car</Link>
+        <Link href="/auctions/create">Sell my car</Link>
       </Dropdown.Item>
 
       <Dropdown.Item icon={HiCog}>

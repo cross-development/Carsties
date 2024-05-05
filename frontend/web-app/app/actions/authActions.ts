@@ -8,7 +8,7 @@ export const getSession = async (): Promise<Session | null> => {
   return await getServerSession(authOptions);
 };
 
-export const getCurrentUser = async (): Promise<Partial<User> | null> => {
+export const getCurrentUser = async (): Promise<User | null> => {
   try {
     const session = await getSession();
 

@@ -1,4 +1,5 @@
 import { memo, FC } from 'react';
+import Link from 'next/link';
 import CarImage from './CarImage';
 import CountdownTimer from './CountdownTimer';
 import { Auction } from '@/types';
@@ -8,8 +9,8 @@ interface Props {
 }
 
 const AuctionCard: FC<Props> = memo(({ auction }) => (
-  <a
-    href="#"
+  <Link
+    href={`/auctions/details/${auction.id}`}
     className="group"
   >
     <div className="w-full bg-gray-200 aspect-w-16 aspect-h-10 rounded-lg overflow-hidden">
@@ -29,7 +30,7 @@ const AuctionCard: FC<Props> = memo(({ auction }) => (
 
       <p className="font-semibold text-sm">{auction.year}</p>
     </div>
-  </a>
+  </Link>
 ));
 
 AuctionCard.displayName = 'AuctionCard';
