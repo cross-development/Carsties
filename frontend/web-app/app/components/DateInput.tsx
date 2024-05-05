@@ -31,6 +31,7 @@ const DateInput: FC<Props> = memo(props => {
             }
         `}
       />
+
       {fieldState.error && <div className="text-red-500 text-sm">{fieldState.error.message}</div>}
     </div>
   );

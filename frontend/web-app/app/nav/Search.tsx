@@ -1,10 +1,14 @@
 'use client';
 
 import { ChangeEvent, FC, KeyboardEvent, memo } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { FaTimes, FaSearch } from 'react-icons/fa';
 import { useParamsStore } from '@/hooks/useParamsStore';
 
 const Search: FC = memo(() => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const searchValue = useParamsStore(state => state.searchValue);
   const setParams = useParamsStore(state => state.setParams);
   const setSearchValue = useParamsStore(state => state.setSearchValue);
@@ -15,6 +19,10 @@ const Search: FC = memo(() => {
   };
 
   const handleSearch = (): void => {
+    if (pathname !== '/') {
+      router.push('/');
+    }
+
     setParams({ searchTerm: searchValue });
   };
 

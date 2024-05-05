@@ -1,24 +1,65 @@
 'use client';
 
 import { FC, memo, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import { Button } from 'flowbite-react';
 import { FieldValues, useForm } from 'react-hook-form';
 import Input from '../components/Input';
 import DateInput from '../components/DateInput';
+import { createAuction, updateAuction } from '../actions/auctionActions';
+import { Auction } from '@/types';
 
-const AuctionForm: FC = memo(() => {
+interface Props {
+  auction?: Auction;
+}
+
+const AuctionForm: FC<Props> = memo(({ auction }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const {
     control,
+    reset,
     setFocus,
     handleSubmit,
-    formState: { isSubmitting, isValid, isDirty, errors },
+    formState: { isSubmitting, isValid },
   } = useForm({ mode: 'onTouched' });
 
   useEffect(() => {
-    setFocus('make');
-  }, [setFocus]);
+    if (auction) {
+      const { make, model, color, mileage, year } = auction;
 
-  const onSubmit = (data: FieldValues): void => {};
+      reset({ make, model, color, mileage, year });
+    }
+
+    setFocus('make');
+  }, [reset, setFocus, auction]);
+
+  const onSubmit = async (data: FieldValues): Promise<void> => {
+    try {
+      let id = '';
+      let res: Auction;
+
+      if (pathname === '/auction/create') {
+        res = await createAuction(data);
+        id = res.id;
+      } else {
+        if (auction) {
+          res = await updateAuction(auction.id, data);
+          id = auction.id;
+        }
+      }
+
+      if ('error' in res!) {
+        throw res.error;
+      }
+
+      router.push(`/auctions/details/${id}`);
+    } catch (error: any) {
+      toast.error(`${error.status} ${error.message}`);
+    }
+  };
 
   return (
     <form
@@ -54,6 +95,7 @@ const AuctionForm: FC = memo(() => {
           control={control}
           rules={{ required: 'Year is required' }}
         />
+
         <Input
           name="mileage"
           label="Mileage"
@@ -63,30 +105,35 @@ const AuctionForm: FC = memo(() => {
         />
       </div>
 
-      <Input
-        name="imageUrl"
-        label="Image URL"
-        control={control}
-        rules={{ required: 'Image URL is required' }}
-      />
+      {pathname === '/auctions/create' && (
+        <>
+          <Input
+            name="imageUrl"
+            label="Image URL"
+            control={control}
+            rules={{ required: 'Image URL is required' }}
+          />
 
-      <div className="grid grid-cols-2 gap-3">
-        <Input
-          name="reservePrice"
-          label="Reserve Price (enter 0 if no reserve)"
-          type="number"
-          control={control}
-          rules={{ required: 'Reserve Price is required' }}
-        />
-        <DateInput
-          showTimeSelect
-          name="auctionEnd"
-          label="Auction end date/time"
-          dateFormat="dd MMMM yyyy h:mm a"
-          control={control}
-          rules={{ required: 'Auction end date is required' }}
-        />
-      </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Input
+              name="reservePrice"
+              label="Reserve Price (enter 0 if no reserve)"
+              type="number"
+              control={control}
+              rules={{ required: 'Reserve Price is required' }}
+            />
+
+            <DateInput
+              showTimeSelect
+              name="auctionEnd"
+              label="Auction end date/time"
+              dateFormat="dd MMMM yyyy h:mm a"
+              control={control}
+              rules={{ required: 'Auction end date is required' }}
+            />
+          </div>
+        </>
+      )}
 
       <div className="flex justify-end">
         <Button
