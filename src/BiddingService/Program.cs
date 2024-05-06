@@ -2,13 +2,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MassTransit;
 using MongoDB.Driver;
 using MongoDB.Entities;
+using BiddingService.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMassTransit(configs =>
 {
+    configs.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
     configs.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("bids", false));
     configs.UsingRabbitMq((context, cfg) =>
     {
