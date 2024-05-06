@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using MassTransit;
 using MongoDB.Entities;
 using BiddingService.DTOs;
 using BiddingService.Models;
+using Contracts;
 
 namespace BiddingService.Controllers;
 
@@ -12,10 +14,12 @@ namespace BiddingService.Controllers;
 public class BidsController : ControllerBase
 {
     private readonly IMapper _mapper;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public BidsController(IMapper mapper)
+    public BidsController(IMapper mapper, IPublishEndpoint publishEndpoint)
     {
         _mapper = mapper;
+        _publishEndpoint = publishEndpoint;
     }
 
     [Authorize]
@@ -67,6 +71,8 @@ public class BidsController : ControllerBase
         }
 
         await DB.SaveAsync(bidEntity);
+
+        await _publishEndpoint.Publish(_mapper.Map<BidPlaced>(bidEntity));
 
         var response = _mapper.Map<BidDto>(bidEntity);
 

@@ -3,12 +3,14 @@ using MassTransit;
 using MongoDB.Driver;
 using MongoDB.Entities;
 using BiddingService.Consumers;
+using BiddingService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddHostedService<CheckAuctionFinished>();
 builder.Services.AddMassTransit(configs =>
 {
     configs.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
