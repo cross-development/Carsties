@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiddingService", "src\BiddingService\BiddingService.csproj", "{D850E2EC-F3CA-4D45-9AF8-4796A29C7197}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiddingService", "src\BiddingService\BiddingService.csproj", "{D850E2EC-F3CA-4D45-9AF8-4796A29C7197}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,5 +63,8 @@ Global
 		{AB98816A-4158-4641-92CF-2C52637D90C3} = {EBDF490B-CAE9-4EBD-9FD8-7359A4D7968A}
 		{27CC825F-C441-4D84-8FAF-2B83700FA052} = {EBDF490B-CAE9-4EBD-9FD8-7359A4D7968A}
 		{D850E2EC-F3CA-4D45-9AF8-4796A29C7197} = {EBDF490B-CAE9-4EBD-9FD8-7359A4D7968A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5058F9A7-5269-4783-90D1-C000B6935B47}
 	EndGlobalSection
 EndGlobal

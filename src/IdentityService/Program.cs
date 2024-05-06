@@ -1,5 +1,5 @@
-﻿using IdentityService;
-using Serilog;
+﻿using Serilog;
+using IdentityService;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()

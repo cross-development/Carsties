@@ -24,7 +24,7 @@ public static class Config
             {
                ClientId = "postman",
                ClientName = "postman",
-               AllowedScopes = { "openId", "profile", "auctionApp" },
+               AllowedScopes = { "openid", "profile", "auctionApp" },
                RedirectUris = { "https://www.getpostman.com/oauth2/callback" },
                ClientSecrets = new [] { new Secret("NotASecret".Sha256()) },
                AllowedGrantTypes = { GrantType.ResourceOwnerPassword }
@@ -38,7 +38,7 @@ public static class Config
                 RequirePkce = false,
                 RedirectUris = { "https://localhost:3000/api/auth/callback/id-server" },
                 AllowOfflineAccess = true,
-                AllowedScopes = { "openId", "profile", "auctionApp" },
+                AllowedScopes = { "openid", "profile", "auctionApp" },
                 AccessTokenLifetime = 3600 * 24 * 30,
                 AlwaysIncludeUserClaimsInIdToken = true,
             }

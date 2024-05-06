@@ -1,7 +1,7 @@
-﻿using BiddingService.Models;
-using Contracts;
-using MassTransit;
+﻿using MassTransit;
 using MongoDB.Entities;
+using BiddingService.Models;
+using Contracts;
 
 namespace BiddingService.Services;
 

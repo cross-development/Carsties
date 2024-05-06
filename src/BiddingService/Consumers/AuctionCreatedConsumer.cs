@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using MongoDB.Entities;
-using Contracts;
 using BiddingService.Models;
+using Contracts;
 
 namespace BiddingService.Consumers;
 

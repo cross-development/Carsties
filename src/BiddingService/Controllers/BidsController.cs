@@ -5,6 +5,7 @@ using MassTransit;
 using MongoDB.Entities;
 using BiddingService.DTOs;
 using BiddingService.Models;
+using BiddingService.Services;
 using Contracts;
 
 namespace BiddingService.Controllers;
@@ -15,23 +16,24 @@ public class BidsController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IPublishEndpoint _publishEndpoint;
+    private readonly GrpcAuctionClient _grpcAuctionClient;
 
-    public BidsController(IMapper mapper, IPublishEndpoint publishEndpoint)
+    public BidsController(IMapper mapper, IPublishEndpoint publishEndpoint, GrpcAuctionClient grpcAuctionClient)
     {
         _mapper = mapper;
         _publishEndpoint = publishEndpoint;
+        _grpcAuctionClient = grpcAuctionClient;
     }
 
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<BidDto>> PlaceBid(string auctionId, int amount)
     {
-        var auction = await DB.Find<Auction>().OneAsync(auctionId);
+        var auction = await DB.Find<Auction>().OneAsync(auctionId) ?? _grpcAuctionClient.GetAuction(auctionId);
 
         if (auction == null)
         {
-            // TODO: check with auction service if that has auction
-            return NotFound();
+            return BadRequest("Cannot accept bids on this auction at this time");
         }
 
         if (auction.Seller == User.Identity?.Name)

@@ -2,9 +2,9 @@ using System.Net;
 using MassTransit;
 using Polly;
 using Polly.Extensions.Http;
-using SearchService.Consumers;
 using SearchService.Data;
 using SearchService.Services;
+using SearchService.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 

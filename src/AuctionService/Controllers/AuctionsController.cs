@@ -47,7 +47,7 @@ public class AuctionsController : ControllerBase
     public async Task<ActionResult<AuctionDto>> GetAuctionById(Guid id)
     {
         var auction = await _context.Auctions
-            .Include(x => x.Item)
+            .Include(auction => auction.Item)
             .FirstOrDefaultAsync();
 
         if (auction == null)

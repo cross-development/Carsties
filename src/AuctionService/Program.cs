@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using AuctionService.Data;
 using AuctionService.Consumers;
+using AuctionService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddGrpc();
 builder.Services.AddDbContext<AuctionDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -30,7 +32,6 @@ builder.Services.AddMassTransit(configs =>
             host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
             host.Username(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
         });
-
         cfg.ConfigureEndpoints(context);
     });
 });
@@ -57,6 +58,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcService<GrpcAuctionService>();
 
 try
 {

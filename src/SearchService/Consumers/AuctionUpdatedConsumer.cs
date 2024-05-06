@@ -17,20 +17,20 @@ public class AuctionUpdatedConsumer : IConsumer<AuctionUpdated>
 
     public async Task Consume(ConsumeContext<AuctionUpdated> context)
     {
-        Console.WriteLine("--> Consuming auction updated: " + context.Message.Id);
+        Console.WriteLine("==> Consuming auction updated: " + context.Message.Id);
 
-        var item = _mapper.Map<Item>(context.Message);
+        var itemEntity = _mapper.Map<Item>(context.Message);
 
         var result = await DB.Update<Item>()
             .Match(auction => auction.ID == context.Message.Id)
-            .ModifyOnly(x => new
+            .ModifyOnly(item => new
             {
-                x.Color,
-                x.Make,
-                x.Model,
-                x.Year,
-                x.Mileage
-            }, item)
+                item.Color,
+                item.Make,
+                item.Model,
+                item.Year,
+                item.Mileage
+            }, itemEntity)
             .ExecuteAsync();
 
         if (!result.IsAcknowledged)

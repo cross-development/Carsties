@@ -30,9 +30,10 @@ public class SearchController : ControllerBase
 
         query = searchParams.OrderBy switch
         {
-            "make" => query.Sort(x => x.Ascending(item => item.Make)).Sort(x => x.Ascending(item => item.Model)),
-            "new" => query.Sort(x => x.Descending(item => item.CreatedAt)),
-            _ => query.Sort(x => x.Ascending(item => item.AuctionEnd))
+            "make" => query.Sort(builder => builder.Ascending(item => item.Make))
+                           .Sort(builder => builder.Ascending(item => item.Model)),
+            "new" => query.Sort(builder => builder.Descending(item => item.CreatedAt)),
+            _ => query.Sort(builder => builder.Ascending(item => item.AuctionEnd))
         };
 
         if (!string.IsNullOrEmpty(searchParams.Seller))
