@@ -1,6 +1,7 @@
 import { memo, FC } from 'react';
 import Link from 'next/link';
 import CarImage from './CarImage';
+import CurrentBit from './CurrentBit';
 import CountdownTimer from './CountdownTimer';
 import { Auction } from '@/types';
 
@@ -19,6 +20,13 @@ const AuctionCard: FC<Props> = memo(({ auction }) => (
 
         <div className="absolute bottom-2 left-2">
           <CountdownTimer auctionEnd={auction.auctionEnd} />
+        </div>
+
+        <div className="absolute top-2 right-2">
+          <CurrentBit
+            amount={auction.currentHighBid}
+            reservePrice={auction.reservePrice}
+          />
         </div>
       </div>
     </div>

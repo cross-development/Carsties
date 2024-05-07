@@ -7,11 +7,19 @@ import AuctionCard from './AuctionCard';
 import NoData from '../components/NoData';
 import AppPagination from '../components/AppPagination';
 import { getData } from '../actions/auctionActions';
-import { Auction, PagedResult } from '@/types';
 import { useParamsStore } from '@/hooks/useParamsStore';
+import { useAuctionStore } from '@/hooks/useAuctionStore';
 
 const Listings: FC = memo(() => {
-  const [data, setData] = useState<PagedResult<Auction>>();
+  const [loading, setLoading] = useState(true);
+
+  const data = useAuctionStore(state => ({
+    auctions: state.auctions,
+    totalCount: state.totalCount,
+    pageCount: state.pageCount,
+  }));
+
+  const setData = useAuctionStore(state => state.setData);
 
   const params = useParamsStore(state => ({
     pageSize: state.pageSize,
@@ -33,10 +41,12 @@ const Listings: FC = memo(() => {
   );
 
   useEffect(() => {
-    getData(url).then(setData);
-  }, [url]);
+    getData(url)
+      .then(setData)
+      .finally(() => setLoading(false));
+  }, [setData, url]);
 
-  if (!data) {
+  if (loading) {
     return <h3>Loading...</h3>;
   }
 
@@ -49,7 +59,7 @@ const Listings: FC = memo(() => {
       ) : (
         <>
           <div className="grid grid-cols-4 gap-6">
-            {data.results.map(auction => (
+            {data.auctions.map(auction => (
               <AuctionCard
                 key={auction.id}
                 auction={auction}
