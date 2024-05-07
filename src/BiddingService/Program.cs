@@ -23,7 +23,6 @@ builder.Services.AddMassTransit(configs =>
             host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
             host.Username(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
         });
-
         cfg.ConfigureEndpoints(context);
     });
 });
