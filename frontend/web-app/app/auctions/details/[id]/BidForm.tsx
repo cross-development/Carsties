@@ -1,6 +1,7 @@
 'use client';
 
 import { FC, memo } from 'react';
+import toast from 'react-hot-toast';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useBidStore } from '@/hooks/useBidStore';
 import { formatCurrency } from '@/lib/helpers/formatCurrency';
@@ -22,10 +23,18 @@ const BidForm: FC<Props> = memo(({ auctionId, highBid }) => {
   const addBid = useBidStore(state => state.addBid);
 
   const onSubmit = async (data: FieldValues): Promise<void> => {
-    const bid = await placeBidForAuction(auctionId, +data.amount);
+    try {
+      const bid = await placeBidForAuction(auctionId, +data.amount);
 
-    addBid(bid);
-    reset();
+      if (bid.error) {
+        throw bid.error;
+      }
+
+      addBid(bid);
+      reset();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (

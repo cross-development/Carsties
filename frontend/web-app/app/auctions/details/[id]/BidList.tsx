@@ -4,12 +4,12 @@ import { FC, memo, useState, useEffect, useMemo } from 'react';
 import { User } from 'next-auth';
 import toast from 'react-hot-toast';
 import BitItem from './BitItem';
+import BidForm from './BidForm';
 import { Auction, Bid } from '@/types';
 import { useBidStore } from '@/hooks/useBidStore';
+import NoData from '@/app/components/NoData';
 import Heading from '@/app/components/Heading';
 import { getBidsForAuction } from '@/app/actions/auctionActions';
-import NoData from '@/app/components/NoData';
-import BidForm from './BidForm';
 
 interface Props {
   user: User | null;
@@ -69,10 +69,20 @@ const BidList: FC<Props> = memo(({ user, auction }) => {
       </div>
 
       <div className="px-2 pb-2 text-gray-500">
-        <BidForm
-          highBid={highBid}
-          auctionId={auction.id}
-        />
+        {!user ? (
+          <div className="flex items-center justify-center p-2 text-lg font-semibold">
+            Please login to make a bid
+          </div>
+        ) : user && user.username === auction.seller ? (
+          <div className="flex items-center justify-center p-2 text-lg font-semibold">
+            Please login to make a bid
+          </div>
+        ) : (
+          <BidForm
+            highBid={highBid}
+            auctionId={auction.id}
+          />
+        )}
       </div>
     </div>
   );
