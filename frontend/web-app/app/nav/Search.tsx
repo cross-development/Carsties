@@ -40,8 +40,7 @@ const Search: FC = memo(() => {
         value={searchValue}
         onChange={handleChange}
         onKeyDown={handleInputKeyDown}
-        className="flex-grow pl-5 bg-transparent border-transparent text-sm text-gray-600
-                   focus:outline-none focus:border-transparent focus:ring-0"
+        className="input-custom text-sm text-gray-600"
       />
 
       {searchValue && (

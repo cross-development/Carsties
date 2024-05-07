@@ -1,7 +1,7 @@
 import { FC, memo } from 'react';
 import { Button, ButtonGroup } from 'flowbite-react';
 import { useParamsStore } from '@/hooks/useParamsStore';
-import * as filterSettings from '@/helpers/filterSettings';
+import { filterButtons, orderButtons, pageSizeButtons } from '@/lib/helpers/filterSettings';
 
 const Filters: FC = memo(() => {
   const orderBy = useParamsStore(state => state.orderBy);
@@ -15,7 +15,7 @@ const Filters: FC = memo(() => {
         <span className="uppercase text-sm text-gray-500 mr-2">Filter by</span>
 
         <ButtonGroup>
-          {filterSettings.filterButtons.map(({ label, icon: Icon, value }) => (
+          {filterButtons.map(({ label, icon: Icon, value }) => (
             <Button
               key={value}
               positionInGroup="start"
@@ -34,7 +34,7 @@ const Filters: FC = memo(() => {
         <span className="uppercase text-sm text-gray-500 mr-2">Order by</span>
 
         <ButtonGroup>
-          {filterSettings.orderButtons.map(({ label, icon: Icon, value }) => (
+          {orderButtons.map(({ label, icon: Icon, value }) => (
             <Button
               key={value}
               positionInGroup="start"
@@ -53,7 +53,7 @@ const Filters: FC = memo(() => {
         <span className="uppercase text-sm text-gray-500 mr-2">Page size</span>
 
         <ButtonGroup>
-          {filterSettings.pageSizeButtons.map((value, index) => (
+          {pageSizeButtons.map((value, index) => (
             <Button
               key={index}
               positionInGroup="start"

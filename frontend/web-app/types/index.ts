@@ -24,3 +24,12 @@ export type Auction = {
 };
 
 export type UpdateAuctionResult = string | { status: number; message: string };
+
+export type Bid = {
+  id: string;
+  auctionId: string;
+  bidder: string;
+  bidTime: string;
+  amount: number;
+  bidStatus: string;
+};

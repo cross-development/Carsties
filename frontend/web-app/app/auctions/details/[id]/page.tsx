@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import BidList from './BidList';
 import EditButton from './EditButton';
 import CarImage from '../../CarImage';
 import DeleteButton from './DeleteButton';
@@ -45,9 +46,10 @@ const Details: FC<Props> = async ({ params }) => {
           <CarImage imageUrl={auction.imageUrl} />
         </div>
 
-        <div className="border-2 rounded-lg p-2 bg-gray-100">
-          <Heading title="Bids" />
-        </div>
+        <BidList
+          user={user}
+          auction={auction}
+        />
       </div>
 
       <div className="mt-3 grid grid-cols-1 rounded-lg">

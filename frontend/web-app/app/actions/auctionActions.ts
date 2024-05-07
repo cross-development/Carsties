@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { FieldValues } from 'react-hook-form';
 import { fetchWrapper } from '@/lib/fetchWrapper';
-import { Auction, PagedResult, UpdateAuctionResult } from '@/types';
+import { Auction, Bid, PagedResult, UpdateAuctionResult } from '@/types';
 
 export const getData = async (query: string): Promise<PagedResult<Auction>> => {
   return await fetchWrapper.get(`/search${query}`);
@@ -35,4 +35,12 @@ export const updateAuction = async (id: string, data: FieldValues): Promise<Auct
 
 export const deleteAuction = async (id: string): Promise<any> => {
   return await fetchWrapper.del(`/auctions/${id}`);
+};
+
+export const getBidsForAuction = async (id: string): Promise<Bid[]> => {
+  return await fetchWrapper.get(`/bids/${id}`);
+};
+
+export const placeBidForAuction = async (auctionId: string, amount: number) => {
+  return await fetchWrapper.post(`/bids?auctionId=${auctionId}&amount=${amount}`, {});
 };
