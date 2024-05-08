@@ -1,6 +1,6 @@
-import { Auction, PagedResult } from '@/types';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
+import { Auction, PagedResult } from '@/types';
 
 type State = {
   auctions: Auction[];

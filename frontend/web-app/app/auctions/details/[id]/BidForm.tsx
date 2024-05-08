@@ -13,16 +13,18 @@ interface Props {
 }
 
 const BidForm: FC<Props> = memo(({ auctionId, highBid }) => {
-  const {
-    reset,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { reset, register, handleSubmit } = useForm();
 
   const addBid = useBidStore(state => state.addBid);
 
   const onSubmit = async (data: FieldValues): Promise<void> => {
+    if (data.amount <= highBid) {
+      reset();
+      toast.error(`Bid must be at least $${formatCurrency(highBid + 1)}`);
+
+      return;
+    }
+
     try {
       const bid = await placeBidForAuction(auctionId, +data.amount);
 
