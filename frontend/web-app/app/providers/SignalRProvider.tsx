@@ -23,8 +23,13 @@ const SignalRProvider: FC<Props> = ({ children, user }) => {
   const setCurrentPrice = useAuctionStore(state => state.setCurrentPrice);
 
   useEffect(() => {
+    const apiUrl =
+      process.env.NODE_ENV === 'production'
+        ? 'https://api.carsties.com/notifications'
+        : process.env.NEXT_PUBLIC_NOTIFY_URL!;
+
     const newConnection = new HubConnectionBuilder()
-      .withUrl('http://localhost:6001/notifications')
+      .withUrl(apiUrl)
       .withAutomaticReconnect()
       .build();
 

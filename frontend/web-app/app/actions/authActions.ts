@@ -2,7 +2,7 @@ import { NextApiRequest } from 'next';
 import { cookies, headers } from 'next/headers';
 import { JWT, getToken } from 'next-auth/jwt';
 import { Session, User, getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 
 export const getSession = async (): Promise<Session | null> => {
   return await getServerSession(authOptions);

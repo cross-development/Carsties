@@ -1,7 +1,6 @@
 import { FC, HTMLInputTypeAttribute, memo } from 'react';
 import { UseControllerProps, useController } from 'react-hook-form';
 import DatePicker, { ReactDatePickerProps } from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.module.css';
 
 interface Props extends UseControllerProps, Partial<ReactDatePickerProps> {
   label: string;
