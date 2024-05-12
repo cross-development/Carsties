@@ -11,11 +11,18 @@ builder.Services.AddMassTransit(configs =>
     configs.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("nt", false));
     configs.UsingRabbitMq((context, cfg) =>
     {
+        cfg.UseRetry(retry =>
+        {
+            retry.Handle<RabbitMqConnectionException>();
+            retry.Interval(5, TimeSpan.FromSeconds(10));
+        });
+
         cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
         {
             host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
             host.Username(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
         });
+
         cfg.ConfigureEndpoints(context);
     });
 });

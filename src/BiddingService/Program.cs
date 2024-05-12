@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using MongoDB.Entities;
 using BiddingService.Consumers;
 using BiddingService.Services;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +19,18 @@ builder.Services.AddMassTransit(configs =>
     configs.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("bids", false));
     configs.UsingRabbitMq((context, cfg) =>
     {
+        cfg.UseRetry(retry =>
+        {
+            retry.Handle<RabbitMqConnectionException>();
+            retry.Interval(5, TimeSpan.FromSeconds(10));
+        });
+
         cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
         {
             host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
             host.Username(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
         });
+
         cfg.ConfigureEndpoints(context);
     });
 });
@@ -49,7 +57,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await DB.InitAsync("BidDb", MongoClientSettings
-    .FromConnectionString(builder.Configuration.GetConnectionString("BidDbConnection")));
+await Policy.Handle<TimeoutException>()
+    .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(10))
+    .ExecuteAndCaptureAsync(async () =>
+    {
+        await DB.InitAsync("BidDb", MongoClientSettings.FromConnectionString(
+            builder.Configuration.GetConnectionString("BidDbConnection")));
+    });
 
 app.Run();

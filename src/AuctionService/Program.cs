@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Polly;
+using Npgsql;
 using MassTransit;
 using AuctionService.Data;
 using AuctionService.Consumers;
@@ -27,11 +29,18 @@ builder.Services.AddMassTransit(configs =>
     configs.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("auction", false));
     configs.UsingRabbitMq((context, cfg) =>
     {
+        cfg.UseRetry(retry =>
+        {
+            retry.Handle<RabbitMqConnectionException>();
+            retry.Interval(5, TimeSpan.FromSeconds(10));
+        });
+
         cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
         {
             host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
             host.Username(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
         });
+
         cfg.ConfigureEndpoints(context);
     });
 });
@@ -61,14 +70,9 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapGrpcService<GrpcAuctionService>();
 
-try
-{
-    DbInitializer.InitDb(app);
-}
-catch (Exception e)
-{
-    Console.WriteLine(e);
-}
+Policy.Handle<NpgsqlException>()
+    .WaitAndRetry(5, retryAttempt => TimeSpan.FromSeconds(10))
+    .ExecuteAndCapture(() => DbInitializer.InitDb(app));
 
 app.Run();
 
