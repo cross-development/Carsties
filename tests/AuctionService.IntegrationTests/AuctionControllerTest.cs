@@ -8,7 +8,8 @@ using AuctionService.IntegrationTests.Fixtures;
 
 namespace AuctionService.IntegrationTests;
 
-public class AuctionControllerTest : IClassFixture<CustomWebAppFactory>, IAsyncLifetime
+[Collection("Shared collection")]
+public class AuctionControllerTest : IAsyncLifetime
 {
     private const string GT_ID = "afbee524-5972-4075-8800-7d1f9d7b0a0c";
 
